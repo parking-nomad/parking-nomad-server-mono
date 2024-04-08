@@ -4,7 +4,6 @@ package parkingnomad.parkingnomadservermono.config.resolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import parkingnomad.parkingnomadservermono.config.resolver.AuthArgumentResolver;
 
 import java.util.List;
 

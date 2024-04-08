@@ -45,4 +45,18 @@ class AddressLocatorTest extends BaseTest {
         assertThat(result).isEmpty();
     }
 
+    @Test
+    @DisplayName("좌표에 해당하는 도로명 주소가 없는 경우 지번 주소를 반환한다.")
+    void convertToOldAddress() {
+        //given
+        String address = "경기 성남시 중원구 상대원동 370-9";
+        double latitude = 37.436179;
+        double longitude = 127.180320;
+
+        //when
+        String result = addressLocator.convertToAddress(latitude, longitude).get();
+
+        //then
+        assertThat(result).isEqualTo(address);
+    }
 }

@@ -2,7 +2,6 @@ package parkingnomad.parkingnomadservermono.acceptance.steps;
 
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import parkingnomad.parkingnomadservermono.member.domain.UserInfo;
 import parkingnomad.parkingnomadservermono.member.domain.oauth.clients.OAuthClients;
 
 import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
