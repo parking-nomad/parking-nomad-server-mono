@@ -96,7 +96,7 @@ class ParkingRepositoryTest extends BaseTestWithContainers {
     }
 
     @Test
-    @DisplayName("memberId가 일치하는 parking 중 가장 최근에 생성된 parking을 조회한다.")
+    @DisplayName("memberId가 일치하는 parking.feature 중 가장 최근에 생성된 parking을 조회한다.")
     void findLatestParkingByMemberId() {
         //given
         parkingRepository.save(Parking.createWithoutId(1L, 20, 60, "address1"));
