@@ -21,14 +21,14 @@ public class PageResponse<T> {
     }
 
     public static <E,O> PageResponse<O> of(final Slice<E> slice, final List<O> contents) {
+        System.out.println("adsfadsfads!! : " + slice.hasNext());
         boolean hasNext = slice.hasNext();
         int contentsSize = slice.getSize();
         int currentPage = slice.getNumber();
-
         return new PageResponse<>(hasNext, contents, contentsSize, currentPage);
     }
 
-    public boolean hasNext() {
+    public boolean getHasNext() {
         return hasNext;
     }
 

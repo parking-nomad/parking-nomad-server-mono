@@ -1,20 +1,23 @@
 package parkingnomad.parkingnomadservermono.acceptance.steps;
 
+import io.cucumber.datatable.DataTable;
+import io.cucumber.java.ParameterType;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.multipart.MultipartFile;
 import parkingnomad.parkingnomadservermono.acceptance.CucumberClient;
 import parkingnomad.parkingnomadservermono.parking.MockParkingImageFile;
+import parkingnomad.parkingnomadservermono.parking.application.port.in.dto.PageResponse;
 import parkingnomad.parkingnomadservermono.parking.application.port.in.dto.ParkingResponse;
 import parkingnomad.parkingnomadservermono.parking.application.port.in.dto.SaveParkingRequest;
 import parkingnomad.parkingnomadservermono.parking.application.port.out.ImageUploader;
+
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -111,10 +114,51 @@ public class ParkingSteps {
         client.setResponse(response);
     }
 
+    @When("주차정보를 반환한다. 페이지 사이즈 = {int}, 페이지 넘버 = {int}")
+    public void findParkingsByMemberIdAndPage(int size, int page) {
+        final String accessToken = client.getAccessToken();
+
+        final ExtractableResponse<Response> response = given().log().all()
+                .auth().oauth2(accessToken)
+                .queryParam("page", page)
+                .queryParam("size", size)
+                .when().get("api/parkings")
+                .then().log().all()
+                .extract();
+
+        client.setResponse(response);
+    }
+
     @Then("{int}을 응답한다.")
     public void checkStatusCode(int statusCode) {
         final ExtractableResponse<Response> response = client.getResponse();
 
         assertThat(response.statusCode()).isEqualTo(statusCode);
+    }
+
+    @Then("응답은 아래의 주차정보를 포함한다.")
+    public void checkFindParkingPageableResponse(DataTable dataTable) {
+        final List<String> keys = dataTable.asList(String.class);
+        final List<Long> parkingIds = keys.stream()
+                .map(client::getData)
+                .toList();
+
+        final ExtractableResponse<Response> response = client.getResponse();
+        final JsonPath jsonPath = response.jsonPath();
+        final List<Long> resultIds = jsonPath.getList("contents.id", Long.class);
+
+        assertThat(resultIds).containsExactlyElementsOf(parkingIds);
+    }
+
+    @ParameterType(value = "true|True|TRUE|false|False|FALSE")
+    public Boolean booleanValue(String value) {
+        return Boolean.valueOf(value);
+    }
+
+    @Then("hasNext는 {booleanValue} 이다.")
+    public void checkHasNext(final boolean expectedHasNext) {
+        final PageResponse pageResponse = client.getResponse().as(PageResponse.class);
+
+        assertThat(pageResponse.getHasNext()).isEqualTo(expectedHasNext);
     }
 }

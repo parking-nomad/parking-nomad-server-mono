@@ -40,7 +40,7 @@ class FindParkingsByMemberIdUseCaseTest extends BaseTestWithContainers {
 
         //then
         assertSoftly(softAssertions -> {
-            softAssertions.assertThat(results.hasNext()).isTrue();
+            softAssertions.assertThat(results.getHasNext()).isTrue();
             softAssertions.assertThat(results.getCurrentPage()).isEqualTo(pageNumber);
             softAssertions.assertThat(results.getContentsSize()).isEqualTo(3);
             softAssertions.assertThat(results.getContents())

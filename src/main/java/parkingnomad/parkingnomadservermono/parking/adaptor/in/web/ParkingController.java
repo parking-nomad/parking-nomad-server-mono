@@ -1,13 +1,13 @@
 package parkingnomad.parkingnomadservermono.parking.adaptor.in.web;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import parkingnomad.parkingnomadservermono.config.resolver.AuthMember;
-import parkingnomad.parkingnomadservermono.parking.application.port.in.DeleteParkingUseCase;
-import parkingnomad.parkingnomadservermono.parking.application.port.in.FindLatestParkingByMemberIdUseCase;
-import parkingnomad.parkingnomadservermono.parking.application.port.in.FindParkingByIdAndMemberIdUseCase;
-import parkingnomad.parkingnomadservermono.parking.application.port.in.SaveParkingUseCase;
+import parkingnomad.parkingnomadservermono.parking.application.port.in.*;
+import parkingnomad.parkingnomadservermono.parking.application.port.in.dto.PageResponse;
 import parkingnomad.parkingnomadservermono.parking.application.port.in.dto.ParkingResponse;
 import parkingnomad.parkingnomadservermono.parking.application.port.in.dto.SaveParkingRequest;
 
@@ -20,17 +20,20 @@ public class ParkingController {
     private final FindParkingByIdAndMemberIdUseCase findParkingByIdAndMemberIdUseCase;
     private final FindLatestParkingByMemberIdUseCase findLatestParkingByMemberIdUseCase;
     private final DeleteParkingUseCase deleteParkingUseCase;
+    private final FindParkingsByMemberIdUseCase findParkingsByMemberIdUseCase;
 
     public ParkingController(
             final SaveParkingUseCase saveParkingUseCase,
             final FindParkingByIdAndMemberIdUseCase findParkingByIdAndMemberIdUseCase,
             final FindLatestParkingByMemberIdUseCase findLatestParkingByMemberIdUseCase,
-            final DeleteParkingUseCase deleteParkingUseCase
+            final DeleteParkingUseCase deleteParkingUseCase,
+            final FindParkingsByMemberIdUseCase findParkingsByMemberIdUseCase
     ) {
         this.saveParkingUseCase = saveParkingUseCase;
         this.findParkingByIdAndMemberIdUseCase = findParkingByIdAndMemberIdUseCase;
         this.findLatestParkingByMemberIdUseCase = findLatestParkingByMemberIdUseCase;
         this.deleteParkingUseCase = deleteParkingUseCase;
+        this.findParkingsByMemberIdUseCase = findParkingsByMemberIdUseCase;
     }
 
     @PostMapping
@@ -62,5 +65,14 @@ public class ParkingController {
     public ResponseEntity<Void> deleteParkingById(@PathVariable final Long id, @AuthMember final Long memberId) {
         deleteParkingUseCase.deleteParking(memberId, id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<PageResponse<ParkingResponse>> findParkingsByPage(
+            final Pageable pageable,
+            @AuthMember final Long memberId
+    ) {
+        final PageResponse<ParkingResponse> response = findParkingsByMemberIdUseCase.findParkingsByMemberId(pageable, memberId);
+        return ResponseEntity.ok(response);
     }
 }
