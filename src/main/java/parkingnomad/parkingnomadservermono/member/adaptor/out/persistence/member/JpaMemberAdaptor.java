@@ -50,4 +50,9 @@ public class JpaMemberAdaptor implements MemberRepository {
         }
         return Optional.of(jpaMemberMapper.toMemberDomainEntity(jpaMemberEntity));
     }
+
+    @Override
+    public boolean isExistedMember(final Long id) {
+        return jpaMemberRepository.existsById(id);
+    }
 }

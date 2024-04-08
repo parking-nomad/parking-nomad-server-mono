@@ -11,4 +11,6 @@ public interface MemberRepository {
     Optional<Member> findById(final Long id);
 
     Optional<Member> findBySub(final String sub);
+
+    boolean isExistedMember(final Long id);
 }

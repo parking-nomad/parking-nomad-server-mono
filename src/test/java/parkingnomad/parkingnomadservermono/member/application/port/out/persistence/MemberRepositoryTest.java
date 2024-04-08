@@ -53,4 +53,33 @@ class MemberRepositoryTest extends BaseTestWithContainers {
             assertThat(foundMember.getSub()).isEqualTo(sub);
         });
     }
+
+    @Test
+    @DisplayName("회원의 존재 여부를 반환한다.")
+    void isExistedMemberReturnTrue() {
+        //given
+        final String name = "name";
+        final String sub = "sub";
+        final Member member = Member.createWithoutId(sub, name);
+        final Member savedMember = memberRepository.saveMember(member);
+
+        //when
+        final boolean isExisted = memberRepository.isExistedMember(savedMember.getId());
+
+        //then
+        assertThat(isExisted).isTrue();
+    }
+
+    @Test
+    @DisplayName("회원이 존재하지 않으면 false를 반환한다.")
+    void isExistedMemberReturnFalse() {
+        //given
+        final long nonExistentMemberId = -1L;
+
+        //when
+        final boolean isExisted = memberRepository.isExistedMember(nonExistentMemberId);
+
+        //then
+        assertThat(isExisted).isFalse();
+    }
 }
