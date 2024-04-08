@@ -6,6 +6,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import parkingnomad.parkingnomadservermono.parking.application.port.out.persistence.ParkingRepository;
 import parkingnomad.parkingnomadservermono.parking.domain.Parking;
 import parkingnomad.parkingnomadservermono.support.BaseTestWithContainers;
@@ -133,4 +135,32 @@ class ParkingRepositoryTest extends BaseTestWithContainers {
         assertThat(found).isEmpty();
     }
 
+    @Test
+    @DisplayName("memberId가 일치하는 주차정보를 페이징하여 반환한다.")
+    void findParkingsByMemberIdAndPage() {
+        //given
+        final long memberId = 1L;
+        parkingRepository.save(Parking.createWithoutId(memberId, 0, 90, "address1"));
+        parkingRepository.save(Parking.createWithoutId(memberId, 10, 100, "address2"));
+        parkingRepository.save(Parking.createWithoutId(memberId, 20, 110, "address3"));
+        parkingRepository.save(Parking.createWithoutId(memberId, 30, 120, "address4"));
+        parkingRepository.save(Parking.createWithoutId(memberId, 40, 130, "address5"));
+        parkingRepository.save(Parking.createWithoutId(memberId, 50, 140, "address6"));
+        final Parking target1 = parkingRepository.save(Parking.createWithoutId(memberId, 60, 150, "address7"));
+        final Parking target2 = parkingRepository.save(Parking.createWithoutId(memberId, 70, 160, "address8"));
+        final Parking target3 = parkingRepository.save(Parking.createWithoutId(memberId, 80, 170, "address9"));
+        parkingRepository.save(Parking.createWithoutId(2L, 90, 180, "address10"));
+
+        //when
+        final PageRequest pageRequest = PageRequest.of(0, 3);
+        final Slice<Parking> result = parkingRepository.findParkingsByMemberIdAndPage(pageRequest, memberId);
+
+        //then
+        assertSoftly(softAssertions -> {
+            softAssertions.assertThat(result.hasNext()).isTrue();
+            softAssertions.assertThat(result.getContent())
+                    .usingRecursiveFieldByFieldElementComparator()
+                    .containsExactly(target3, target2, target1);
+        });
+    }
 }

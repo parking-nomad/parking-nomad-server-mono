@@ -1,10 +1,15 @@
 package parkingnomad.parkingnomadservermono.parking.adaptor.out.persistence.parking;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Component;
 import parkingnomad.parkingnomadservermono.parking.domain.Parking;
 import parkingnomad.parkingnomadservermono.parking.application.port.out.persistence.ParkingRepository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 
@@ -58,5 +63,14 @@ public class JpaParkingRepository implements ParkingRepository {
     @Override
     public void deleteById(final Long id) {
         parkings.deleteById(id);
+    }
+
+    @Override
+    public Slice<Parking> findParkingsByMemberIdAndPage(final Pageable pageable, final Long memberId) {
+        final Slice<JpaParkingEntity> results = parkings.findJpaParkingEntityByMemberIdOrderByCreatedAtDesc(pageable, memberId);
+        final List<Parking> contents = results.getContent().stream()
+                .map(mapper::toDomainEntity)
+                .collect(Collectors.toList());
+        return new SliceImpl<>(contents, pageable, results.hasNext());
     }
 }
