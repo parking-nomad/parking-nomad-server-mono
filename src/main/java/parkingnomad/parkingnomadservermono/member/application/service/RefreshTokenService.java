@@ -40,7 +40,8 @@ public class RefreshTokenService implements RefreshTokensUseCase {
 
         final Long memberId = refreshTokenAdaptor.findMemberIdByRefreshToken(refreshToken)
                 .orElseThrow(() -> new InvalidRefreshTokenException(INVALID_REFRESH_TOKEN.getCode()));
-
+        System.out.println(refreshToken);
+        System.out.println(memberId);
         memberRepository.findById(memberId)
                 .orElseThrow(() -> new NonExistentMemberException(NON_EXISTENT_MEMBER.getCode(), memberId));
 

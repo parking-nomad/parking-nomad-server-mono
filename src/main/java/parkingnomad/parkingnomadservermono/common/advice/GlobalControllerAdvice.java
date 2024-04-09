@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import parkingnomad.parkingnomadservermono.common.dto.ErrorResponse;
+import parkingnomad.parkingnomadservermono.common.exception.base.AuthException;
 import parkingnomad.parkingnomadservermono.common.exception.base.BadRequestException;
 import parkingnomad.parkingnomadservermono.common.exception.base.ForbiddenException;
 
@@ -26,6 +27,12 @@ public class GlobalControllerAdvice {
     public ResponseEntity<ErrorResponse> handleBadRequestException(final BadRequestException badRequestException) {
         ErrorResponse errorResponse = new ErrorResponse(badRequestException.getErrorCode(), badRequestException.getMessage());
         return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleAuthException(final AuthException authException) {
+        final ErrorResponse errorResponse = new ErrorResponse(authException.getCode(), authException.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
     @ExceptionHandler

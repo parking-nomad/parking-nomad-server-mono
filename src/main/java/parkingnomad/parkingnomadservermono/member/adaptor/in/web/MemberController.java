@@ -1,5 +1,7 @@
 package parkingnomad.parkingnomadservermono.member.adaptor.in.web;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,7 +11,7 @@ import parkingnomad.parkingnomadservermono.member.application.port.in.member.Res
 
 @RestController
 @RequestMapping("api/members")
-public class MemberController {
+public class MemberController implements MemberControllerDocs {
 
     private final ResignUseCase resignUseCase;
 
@@ -18,8 +20,13 @@ public class MemberController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> resign(@AuthMember final Long memberId) {
+    public ResponseEntity<Void> resign(@AuthMember final Long memberId, final HttpServletResponse response) {
         resignUseCase.resign(memberId);
+        final Cookie cookie = new Cookie("refresh_token", "");
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
         return ResponseEntity.noContent().build();
     }
 }

@@ -12,9 +12,11 @@ import parkingnomad.parkingnomadservermono.parking.application.port.in.dto.SaveP
 
 import java.net.URI;
 
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
+
 @RestController
 @RequestMapping("/api/parkings")
-public class ParkingController {
+public class ParkingController implements ParkingControllerDocs {
     private final SaveParkingUseCase saveParkingUseCase;
     private final FindParkingByIdAndMemberIdUseCase findParkingByIdAndMemberIdUseCase;
     private final FindLatestParkingByMemberIdUseCase findLatestParkingByMemberIdUseCase;
@@ -35,7 +37,7 @@ public class ParkingController {
         this.findParkingsByMemberIdUseCase = findParkingsByMemberIdUseCase;
     }
 
-    @PostMapping
+    @PostMapping(consumes = {MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Void> saveParking(
             @AuthMember final Long memberId,
             @RequestPart final SaveParkingRequest saveParkingRequest,

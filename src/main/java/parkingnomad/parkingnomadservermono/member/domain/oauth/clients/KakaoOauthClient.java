@@ -11,10 +11,9 @@ import parkingnomad.parkingnomadservermono.member.exception.oauth.InvalidOpenIdE
 @Component
 public class KakaoOauthClient implements OAuthClient {
 
-    private static final String NAME = "kakao";
     public static final String NICKNAME = "nickname";
     public static final String SUB = "sub";
-
+    private static final String NAME = "kakao";
     private final KakaoOAuthInformationLoader kakaoOAuthInformationLoader;
 
     @Value("${spring.auth.kakao.grant_type}")

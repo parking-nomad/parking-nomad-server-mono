@@ -15,7 +15,7 @@ import parkingnomad.parkingnomadservermono.member.domain.oauth.provider.OAuthPro
 
 @Controller
 @RequestMapping("api/auth")
-public class AuthController {
+public class AuthController implements AuthControllerDocs {
 
     public static final String REFRESH_TOKEN = "refresh_token";
     public static final int MAX_AGE = 60 * 60 * 24 * 7;
@@ -40,12 +40,17 @@ public class AuthController {
             final HttpServletResponse response
     ) {
         final TokenResponse tokenResponse = socialLoginUseCase.socialLogin(code, oAuthProvider);
-        final Cookie cookie = new Cookie(REFRESH_TOKEN, tokenResponse.refreshToken());
+        final Cookie cookie = getRefreshTokenCookie(tokenResponse.refreshToken(), MAX_AGE);
+        response.addCookie(cookie);
+        return ResponseEntity.ok(new AccessTokenResponse(tokenResponse.accessToken()));
+    }
+
+    private Cookie getRefreshTokenCookie(final String refreshToken, final int maxAge) {
+        final Cookie cookie = new Cookie(REFRESH_TOKEN, refreshToken);
         cookie.setMaxAge(MAX_AGE);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
-        response.addCookie(cookie);
-        return ResponseEntity.ok(new AccessTokenResponse(tokenResponse.accessToken()));
+        return cookie;
     }
 
     @GetMapping("refresh")
@@ -54,10 +59,7 @@ public class AuthController {
             final HttpServletResponse response
     ) {
         final TokenResponse tokenResponse = refreshTokensUseCase.refreshTokens(refreshToken);
-        final Cookie cookie = new Cookie(REFRESH_TOKEN, tokenResponse.refreshToken());
-        cookie.setMaxAge(MAX_AGE);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
+        final Cookie cookie = getRefreshTokenCookie(tokenResponse.refreshToken(), MAX_AGE);
         response.addCookie(cookie);
         return ResponseEntity.ok(new AccessTokenResponse(tokenResponse.accessToken()));
     }
@@ -68,11 +70,8 @@ public class AuthController {
             final HttpServletResponse response
     ) {
         logoutUseCase.logout(refreshToken);
-        final Cookie cookie = new Cookie(REFRESH_TOKEN, "");
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        response.addCookie(cookie);
-        return ResponseEntity.ok().build();
+        final Cookie refreshTokenCookie = getRefreshTokenCookie("", 0);
+        response.addCookie(refreshTokenCookie);
+        return ResponseEntity.noContent().build();
     }
 }
