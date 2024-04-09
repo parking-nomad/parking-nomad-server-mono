@@ -7,9 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import parkingnomad.parkingnomadservermono.member.adaptor.in.web.dto.AccessTokenResponse;
-import parkingnomad.parkingnomadservermono.member.application.port.in.LogoutUseCase;
-import parkingnomad.parkingnomadservermono.member.application.port.in.RefreshTokensUseCase;
-import parkingnomad.parkingnomadservermono.member.application.port.in.SocialLoginUseCase;
+import parkingnomad.parkingnomadservermono.member.application.port.in.auth.LogoutUseCase;
+import parkingnomad.parkingnomadservermono.member.application.port.in.auth.RefreshTokensUseCase;
+import parkingnomad.parkingnomadservermono.member.application.port.in.auth.SocialLoginUseCase;
 import parkingnomad.parkingnomadservermono.member.application.port.in.dto.TokenResponse;
 import parkingnomad.parkingnomadservermono.member.domain.oauth.provider.OAuthProvider;
 

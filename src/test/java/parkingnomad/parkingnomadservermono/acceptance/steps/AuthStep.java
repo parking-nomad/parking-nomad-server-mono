@@ -7,6 +7,7 @@ import io.restassured.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import parkingnomad.parkingnomadservermono.acceptance.CucumberClient;
+import parkingnomad.parkingnomadservermono.common.jwt.TokenParser;
 import parkingnomad.parkingnomadservermono.member.adaptor.in.web.dto.AccessTokenResponse;
 import parkingnomad.parkingnomadservermono.member.domain.UserInfo;
 import parkingnomad.parkingnomadservermono.member.domain.oauth.clients.OAuthClients;
@@ -27,6 +28,9 @@ public class AuthStep {
     @Autowired
     OAuthClients oAuthClients;
 
+    @Autowired
+    TokenParser tokenParser;
+
     @When("{string}를 통해 소셜 로그인을 한다.")
     public void socialLogin(final String provider) {
         final UserInfo userInfo = UserInfo.of("sub", provider, "dh");
@@ -41,6 +45,8 @@ public class AuthStep {
                 .extract();
 
         final AccessTokenResponse accessTokenResponse = response.as(AccessTokenResponse.class);
+        final Long memberId = tokenParser.parseToMemberIdFromAccessToken(accessTokenResponse.accessToken());
+        client.addData("member", memberId);
         client.setResponse(response);
         client.setRefreshToken(response.cookie(REFRESH_TOKEN));
         client.setAccessToken(accessTokenResponse.accessToken());

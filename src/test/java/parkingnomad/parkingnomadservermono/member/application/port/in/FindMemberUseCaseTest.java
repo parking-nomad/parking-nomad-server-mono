@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import parkingnomad.parkingnomadservermono.member.application.port.in.dto.MemberResponse;
+import parkingnomad.parkingnomadservermono.member.application.port.in.member.FindMemberUseCase;
 import parkingnomad.parkingnomadservermono.member.application.port.out.persistence.MemberRepository;
 import parkingnomad.parkingnomadservermono.member.domain.Member;
 import parkingnomad.parkingnomadservermono.member.exception.member.InvalidMemberAccessException;

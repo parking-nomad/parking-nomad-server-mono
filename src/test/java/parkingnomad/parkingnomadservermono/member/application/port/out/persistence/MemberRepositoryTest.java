@@ -82,4 +82,21 @@ class MemberRepositoryTest extends BaseTestWithContainers {
         //then
         assertThat(isExisted).isFalse();
     }
+
+    @Test
+    @DisplayName("회원을 삭제한다.")
+    void delete() {
+        //given
+        final String name = "name";
+        final String sub = "sub";
+        final Member member = Member.createWithoutId(sub, name);
+        final Member savedMember = memberRepository.saveMember(member);
+
+        //when
+        memberRepository.deleteById(savedMember.getId());
+
+        //then
+        final boolean existedMember = memberRepository.isExistedMember(savedMember.getId());
+        assertThat(existedMember).isFalse();
+    }
 }

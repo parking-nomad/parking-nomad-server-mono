@@ -55,4 +55,9 @@ public class JpaMemberAdaptor implements MemberRepository {
     public boolean isExistedMember(final Long id) {
         return jpaMemberRepository.existsById(id);
     }
+
+    @Override
+    public void deleteById(final Long id) {
+        jpaMemberRepository.deleteById(id);
+    }
 }

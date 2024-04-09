@@ -19,4 +19,6 @@ public interface ParkingRepository {
     void deleteById(final Long id);
 
     Slice<Parking> findParkingsByMemberIdAndPage(final Pageable pageable, final Long memberId);
+
+    void deleteParkingsByMemberId(final Long memberId);
 }

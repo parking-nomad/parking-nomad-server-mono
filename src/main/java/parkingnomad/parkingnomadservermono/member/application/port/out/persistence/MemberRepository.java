@@ -13,4 +13,6 @@ public interface MemberRepository {
     Optional<Member> findBySub(final String sub);
 
     boolean isExistedMember(final Long id);
+
+    void deleteById(final Long id);
 }

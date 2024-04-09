@@ -4,6 +4,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import parkingnomad.parkingnomadservermono.parking.domain.Parking;
 import parkingnomad.parkingnomadservermono.parking.application.port.out.persistence.ParkingRepository;
 
@@ -72,5 +73,11 @@ public class JpaParkingRepository implements ParkingRepository {
                 .map(mapper::toDomainEntity)
                 .collect(Collectors.toList());
         return new SliceImpl<>(contents, pageable, results.hasNext());
+    }
+
+    @Override
+    @Transactional
+    public void deleteParkingsByMemberId(final Long memberId) {
+        parkings.deleteAllByMemberId(memberId);
     }
 }

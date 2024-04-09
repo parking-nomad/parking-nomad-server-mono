@@ -2,7 +2,7 @@ package parkingnomad.parkingnomadservermono.member.application.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import parkingnomad.parkingnomadservermono.member.application.port.in.LogoutUseCase;
+import parkingnomad.parkingnomadservermono.member.application.port.in.auth.LogoutUseCase;
 import parkingnomad.parkingnomadservermono.member.application.port.out.persistence.RefreshTokenRepository;
 
 @Service

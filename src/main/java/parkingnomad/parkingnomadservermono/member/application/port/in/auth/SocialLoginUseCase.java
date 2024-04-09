@@ -1,4 +1,4 @@
-package parkingnomad.parkingnomadservermono.member.application.port.in;
+package parkingnomad.parkingnomadservermono.member.application.port.in.auth;
 
 
 import parkingnomad.parkingnomadservermono.member.application.port.in.dto.TokenResponse;
