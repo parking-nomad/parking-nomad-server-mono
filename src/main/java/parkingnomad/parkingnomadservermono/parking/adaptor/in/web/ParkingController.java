@@ -4,7 +4,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import parkingnomad.parkingnomadservermono.config.resolver.AuthMember;
+import parkingnomad.parkingnomadservermono.config.mvc.resolver.AuthMember;
 import parkingnomad.parkingnomadservermono.parking.application.port.in.*;
 import parkingnomad.parkingnomadservermono.parking.application.port.in.dto.PageResponse;
 import parkingnomad.parkingnomadservermono.parking.application.port.in.dto.ParkingResponse;

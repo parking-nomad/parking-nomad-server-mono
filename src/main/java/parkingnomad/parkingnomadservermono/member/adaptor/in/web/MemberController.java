@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import parkingnomad.parkingnomadservermono.config.resolver.AuthMember;
+import parkingnomad.parkingnomadservermono.config.mvc.resolver.AuthMember;
 import parkingnomad.parkingnomadservermono.member.application.port.in.member.ResignUseCase;
 
 @RestController

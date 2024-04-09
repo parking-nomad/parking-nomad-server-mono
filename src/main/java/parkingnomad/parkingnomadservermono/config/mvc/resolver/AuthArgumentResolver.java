@@ -1,4 +1,4 @@
-package parkingnomad.parkingnomadservermono.config.resolver;
+package parkingnomad.parkingnomadservermono.config.mvc.resolver;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;

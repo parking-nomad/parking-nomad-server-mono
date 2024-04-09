@@ -1,4 +1,4 @@
-package parkingnomad.parkingnomadservermono.config.resolver;
+package parkingnomad.parkingnomadservermono.config.mvc.resolver;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
