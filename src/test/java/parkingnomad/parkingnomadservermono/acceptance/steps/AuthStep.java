@@ -93,7 +93,7 @@ public class AuthStep {
         final ExtractableResponse<Response> response = client.getResponse();
 
         assertSoftly(softAssertions -> {
-            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
             softAssertions.assertThat(response.cookie(REFRESH_TOKEN)).isEqualTo("");
         });
     }

@@ -1,5 +1,7 @@
 package parkingnomad.parkingnomadservermono.parking.adaptor.in.event;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import parkingnomad.parkingnomadservermono.parking.application.port.in.DeleteLatestParkingByMemberIdUseCase;
 import parkingnomad.parkingnomadservermono.parking.application.port.in.SaveLatestParkingUseCase;
@@ -13,6 +15,8 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 @Component
 public class ParkingCreateEventBroker {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ParkingCreateEventBroker.class);
+
     private final Map<Long, BlockingQueue<Long>> tasksByMemberId = new ConcurrentHashMap<>();
     private final ExecutorService executorService = Executors.newFixedThreadPool(10);
     private final SaveLatestParkingUseCase saveLatestParkingUseCase;
@@ -51,12 +55,12 @@ public class ParkingCreateEventBroker {
                         isTasksEmpty = true;
                         removeTasksByMemberId(memberId);
                         deleteLatestParkingByMemberIdUseCase.deleteLatestParkingByMemberId(memberId);
+                        LOGGER.info("Remove latest parking because of exception");
                     }
                     saveLatestParking(memberId, parkingId);
                     break;
-                } catch (InterruptedException e) {
-//                    TODO : logger로 변경
-                    System.out.println("occurred interruptException");
+                } catch (InterruptedException exception) {
+                    LOGGER.error("PARKING CREATE EVENT BROKER ERROR OCCURRED | ERROR_MSG : {} | \n {} ", exception.getMessage(), exception.getStackTrace()[0]);
                 }
             }
         });

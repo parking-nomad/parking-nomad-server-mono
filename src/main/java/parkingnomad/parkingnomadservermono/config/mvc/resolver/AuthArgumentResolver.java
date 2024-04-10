@@ -1,5 +1,8 @@
 package parkingnomad.parkingnomadservermono.config.mvc.resolver;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -19,8 +22,10 @@ import static parkingnomad.parkingnomadservermono.common.exception.auth.AuthExce
 @Component
 public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
-    public static final String AUTHORIZATION = "Authorization";
-    public static final String ACCESS_TOKEN_PREFIX = "Bearer ";
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthArgumentResolver.class);
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String ACCESS_TOKEN_PREFIX = "Bearer ";
+    private static final String MEMBER_ID = "MEMBER_ID";
 
     private final TokenParser tokenParser;
     private final MemberRepository memberRepository;
@@ -51,6 +56,8 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
         if (!isExisted) {
             throw new InvalidAccessTokenException(INVALID_ACCESS_TOKEN.getCode());
         }
+        MDC.put(MEMBER_ID, String.valueOf(memberId));
+        LOGGER.info("PASS AUTHORIZATION");
         return memberId;
     }
 

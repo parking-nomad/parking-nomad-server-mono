@@ -54,7 +54,7 @@ public class MemberSteps {
 
         final ErrorResponse errorResponse = response.as(ErrorResponse.class);
         assertSoftly(softAssertions -> {
-            softAssertions.assertThat(errorResponse.code()).isEqualTo("INTERNAL_SERVER_ERROR");
+            softAssertions.assertThat(errorResponse.code()).isEqualTo("AUTH0002");
             softAssertions.assertThat(errorResponse.message()).isEqualTo("유효하지 않은 access_token 입니다.");
         });
     }
