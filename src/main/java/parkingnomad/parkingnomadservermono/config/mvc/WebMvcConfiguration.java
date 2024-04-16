@@ -3,6 +3,7 @@ package parkingnomad.parkingnomadservermono.config.mvc;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import parkingnomad.parkingnomadservermono.config.mvc.interceptor.ApiKeyInterceptor;
@@ -34,5 +35,12 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
         registry.addInterceptor(apiKeyInterceptor)
                 .addPathPatterns("/api/swagger-ui/index.html")
                 .addPathPatterns("/api/docs");
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry corsRegistry) {
+        corsRegistry.addMapping("/**")
+                .allowedMethods("*")
+                .allowedOrigins("http://localhost:5173");
     }
 }
